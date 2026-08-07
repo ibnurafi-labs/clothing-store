@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fashion Store Elite</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- VIDEO BACKGROUND -->
+<video autoplay muted loop playsinline id="bg-video">
+    <source src="https://www.pexels.com/download/video/7621840/" type="video/mp4">
+</video>
+
+<!-- FALLBACK -->
+<div class="fallback-bg"></div>
+
+<!-- OVERLAY -->
+<div class="overlay"></div>
+
+<!-- NAVBAR -->
+<header id="navbar">
+<h1>FashionElite</h1>
+
+<input type="text" id="search" placeholder="Cari produk..." onkeyup="searchProduk()">
+
+<nav>
+<a href="#home">Home</a>
+<a href="#produk">Produk</a>
+<a href="#promo">Promo</a>
+<a href="#contact">Contact</a>
+<a href="#about">About</a>
+<a onclick="openCart()">🛒</a>
+</nav>
+</header>
+
+<!-- HOME -->
+<section id="home" class="section">
+<h2>Fashion Modern 🔥</h2>
+<p>Tampil keren setiap hari</p>
+</section>
+
+<!-- FILTER -->
+<div class="filter">
+<button onclick="filterProduk('all')">Semua</button>
+<button onclick="filterProduk('pria')">Pria</button>
+<button onclick="filterProduk('wanita')">Wanita</button>
+<button onclick="filterProduk('trend')">Trend</button>
+</div>
+
+<!-- PRODUK -->
+<section id="produk" class="section">
+<h2>Produk</h2>
+<div class="produk-container" id="produk-list"></div>
+</section>
+
+<!---promo-->
+<section id="promo" class="section">
+<h2>Promo Spesial 🔥</h2>
+
+<div class="produk-container">
+<div class="produk">
+<img src="images/promo/promo1.jpg">
+<h3>Diskon 50%</h3>
+<p><s>Rp.200.000</s></p>
+<p>Rp.100.000</p>
+</div>
+
+<div class="produk">
+<img src="images/promo/promo2.jpg">
+<h3>Diskon 50%</h3>
+<p><s>Rp.200.000</s></p>
+<p>Rp.100.000</p>
+</div>
+</div>
+
+</section>
+<!--contact-->
+<section id="contact" class="section">
+<h2>Contact Kami</h2>
+
+<img src="images/me/nu.jpg" class="profile">
+<p>Nama: Ibnu Rafi al-fansyuri</p>
+<p>WhatsApp: 085766512669</p>
+<p>Email:tugasibnurafi9685@.com</p>
+
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="section">
+<h2>Tentang Kami</h2>
+<p>Kami menghadirkan fashion premium dengan desain modern.</p>
+</section>
+
+<!-- CART -->
+<div id="cart" class="cart">
+<h3>Keranjang</h3>
+<ul id="cart-list"></ul>
+<p>Total: Rp <span id="total">0</span></p>
+<button onclick="closeCart()">Tutup</button>
+</div>
+
+<footer>© 2026 FashionElite</footer>
+
+<script>
+let produk = [];
+let cart = [];
+
+for(let i=1;i<=15;i++){
+let kategori = i%3==0 ? 'wanita' : (i%2==0 ? 'pria':'trend');
+
+produk.push({
+nama: i%3==0 ? "Dress Wanita "+i :
+      i%2==0 ? "Kemeja Pria "+i :
+      "Outfit Trend "+i,
+harga: 100000 + i*10000,
+kategori: kategori
+});
+}
+
+function tampilProduk(data){
+let html="";
+let count = {pria:1, wanita:1, trend:1};
+
+data.forEach(p=>{
+let nomor = count[p.kategori]++;
+
+html += `
+<div class="produk">
+<img src="images/${p.kategori}/${p.kategori}${nomor}.jpg">
+<h3>${p.nama}</h3>
+<p>Rp${p.harga}</p>
+<button onclick="addCart('${p.nama}',${p.harga})">+ Keranjang</button>
+<a href="https://wa.me/6285766512669?text=Pesan ${p.nama}" target="_blank">Pesan</a>
+</div>`;
+});
+
+document.getElementById("produk-list").innerHTML = html;
+}
+
+/* FILTER */
+function filterProduk(kat){
+if(kat=='all') tampilProduk(produk);
+else tampilProduk(produk.filter(p=>p.kategori==kat));
+}
+
+/* SEARCH */
+function searchProduk(){
+let val = document.getElementById("search").value.toLowerCase();
+let hasil = produk.filter(p=>p.nama.toLowerCase().includes(val));
+tampilProduk(hasil);
+}
+
+/* CART */
+function addCart(nama,harga){
+cart.push({nama,harga});
+renderCart();
+}
+
+function renderCart(){
+let list="";
+let total=0;
+cart.forEach(c=>{
+list += `<li>${c.nama} - Rp${c.harga}</li>`;
+total += c.harga;
+});
+document.getElementById("cart-list").innerHTML = list;
+document.getElementById("total").innerText = total;
+}
+
+function openCart(){
+document.getElementById("cart").style.right="0";
+}
+function closeCart(){
+document.getElementById("cart").style.right="-320px";
+}
+</script>
+
+</body>
+</html>
